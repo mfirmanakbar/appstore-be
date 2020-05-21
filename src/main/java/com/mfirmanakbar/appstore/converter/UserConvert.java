@@ -15,7 +15,7 @@ public class UserConvert {
                 .company(userRequest.getCompany())
                 .phoneNumber(userRequest.getPhoneNumber())
                 .email(userRequest.getEmail())
-                .password(userRequest.getPhoneNumber())
+                .password(userRequest.getPassword())
                 .build();
     }
 
