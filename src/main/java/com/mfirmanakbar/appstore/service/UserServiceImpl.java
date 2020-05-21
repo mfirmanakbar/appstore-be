@@ -1,5 +1,6 @@
 package com.mfirmanakbar.appstore.service;
 
+import com.mfirmanakbar.appstore.helper.CustomJSONRootName;
 import com.mfirmanakbar.appstore.model.User;
 import com.mfirmanakbar.appstore.repository.UserRepository;
 import com.mfirmanakbar.appstore.request.UserRequest;
@@ -11,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,6 +31,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserConvert userConvert;
 
+    Map mapResult = new HashMap();
+
     @Override
     public ResponseEntity<?> save(UserRequest userRequest) {
         List<String> errors = userValidator.validateSuccess(userRequest);
@@ -38,9 +43,11 @@ public class UserServiceImpl implements UserService {
             User user = userConvert.userRequestToUser(userRequest);
             user = userRepository.save(user);
             if (user.getId() > 0) {
-                return new ResponseEntity<>(userConvert.userToUserResponse(user), HttpStatus.CREATED);
+                mapResult = new HashMap();
+                mapResult.put(User.class.getAnnotation(CustomJSONRootName.class).singular(), userConvert.userToUserResponse(user));
+                return new ResponseEntity<>(mapResult, HttpStatus.CREATED);
             }
-            return new ResponseEntity<>(userRequest, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new CommonResponse("internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,7 +56,21 @@ public class UserServiceImpl implements UserService {
         User user;
         user = userRepository.findByEmail(email);
         if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            mapResult = new HashMap();
+            mapResult.put(User.class.getAnnotation(CustomJSONRootName.class).singular(), userConvert.userToUserResponse(user));
+            return new ResponseEntity<>(mapResult, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new CommonResponse("email user not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<?> findById(long id) {
+        User user;
+        user = userRepository.findById(id).get();
+        if (user != null) {
+            mapResult = new HashMap();
+            mapResult.put(User.class.getAnnotation(CustomJSONRootName.class).singular(), userConvert.userToUserV2Response(user));
+            return new ResponseEntity<>(mapResult, HttpStatus.OK);
         }
         return new ResponseEntity<>(new CommonResponse("email user not found"), HttpStatus.NOT_FOUND);
     }

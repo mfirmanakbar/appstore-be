@@ -1,5 +1,7 @@
 package com.mfirmanakbar.appstore.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mfirmanakbar.appstore.helper.CustomJSONRootName;
 import lombok.Builder;

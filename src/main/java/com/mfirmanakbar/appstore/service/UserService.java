@@ -7,4 +7,6 @@ public interface UserService {
     ResponseEntity<?> save(UserRequest userRequest);
 
     ResponseEntity<?> findByEmail(String email);
+
+    ResponseEntity<?> findById(long id);
 }

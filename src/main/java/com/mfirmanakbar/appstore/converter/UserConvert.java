@@ -28,4 +28,14 @@ public class UserConvert {
                 .build();
     }
 
+    public UserResponse userToUserV2Response(User user) {
+        return UserResponse.builder()
+                .name(user.getName())
+                .company(user.getCompany())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+//                .myApps(user.getMyApps())
+                .build();
+    }
+
 }
